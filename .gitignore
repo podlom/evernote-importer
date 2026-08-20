@@ -1,1 +1,8 @@
+# IDE
+.idea/
+
+# PHPUnit
+.phpunit.result.cache
+
+# Composer
 /vendor/
