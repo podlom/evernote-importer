@@ -119,4 +119,20 @@ final class EnexImporterTest extends TestCase
 
         self::assertNotEmpty($resource->hash);
     }
+
+    public function test_resolves_embedded_image(): void
+    {
+        $importer = new EnexImporter();
+
+        $document = $importer->import(
+            __DIR__.'/Fixtures/note-with-image.enex'
+        );
+
+        $note = $document->notes[0];
+
+        self::assertStringContainsString(
+            'resources/',
+            $note->content
+        );
+    }
 }

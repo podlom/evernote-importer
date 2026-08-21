@@ -13,17 +13,27 @@ final class NoteParser
         private readonly EvernoteDateParser $dateParser = new EvernoteDateParser(),
         private readonly EnmlParser $enmlParser = new EnmlParser(),
         private readonly ResourceParser $resourceParser = new ResourceParser(),
+        private readonly EnmlMediaResolver $mediaResolver = new EnmlMediaResolver(),
     ) {
     }
 
     public function parse(SimpleXMLElement $xml): Note
     {
+        $resources = $this->extractResources($xml);
+
+        $content = $this->enmlParser->parse(
+            $this->extractContent($xml)
+        );
+
+        $content = $this->mediaResolver->resolve(
+            $content,
+            $resources
+        );
+
         return new Note(
             title: (string) $xml->title,
 
-            content: $this->enmlParser->parse(
-                $this->extractContent($xml)
-            ),
+            content: $content,
 
             tags: $this->extractTags($xml),
 
@@ -37,7 +47,7 @@ final class NoteParser
                 (string) $xml->updated
             ),
 
-            resources: $this->extractResources($xml),
+            resources: $resources,
         );
     }
 
