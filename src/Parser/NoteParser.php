@@ -12,6 +12,7 @@ final class NoteParser
     public function __construct(
         private readonly EvernoteDateParser $dateParser = new EvernoteDateParser(),
         private readonly EnmlParser $enmlParser = new EnmlParser(),
+        private readonly ResourceParser $resourceParser = new ResourceParser(),
     ) {
     }
 
@@ -35,6 +36,8 @@ final class NoteParser
             updatedAt: $this->dateParser->parse(
                 (string) $xml->updated
             ),
+
+            resources: $this->extractResources($xml),
         );
     }
 
@@ -65,5 +68,19 @@ final class NoteParser
 
         return (string)
         $xml->{'note-attributes'}->author;
+    }
+
+    private function extractResources(
+        SimpleXMLElement $xml
+    ): array {
+        $resources = [];
+
+        foreach ($xml->xpath('./resource') ?: [] as $resource) {
+            $resources[] = $this->resourceParser->parse(
+                $resource
+            );
+        }
+
+        return $resources;
     }
 }

@@ -83,4 +83,29 @@ final class EnexImporterTest extends TestCase
             $note->content
         );
     }
+
+    public function test_imports_resources(): void
+    {
+        $document = $this->importer()->import(
+            __DIR__.'/Fixtures/note-with-image.enex'
+        );
+
+        $note = $document->notes[0];
+
+        self::assertCount(
+            1,
+            $note->resources
+        );
+
+        $resource = $note->resources[0];
+
+        self::assertSame(
+            'image/jpeg',
+            $resource->mimeType
+        );
+
+        self::assertNotEmpty(
+            $resource->data
+        );
+    }
 }

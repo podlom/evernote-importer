@@ -10,6 +10,9 @@ final readonly class Resource
         public string $mimeType,
         public ?string $filename = null,
         public ?string $data = null,
+        public ?int $width = null,
+        public ?int $height = null,
+        public ?string $hash = null,
     ) {
     }
 
