@@ -11,6 +11,7 @@ final class NoteParser
 {
     public function __construct(
         private readonly EvernoteDateParser $dateParser = new EvernoteDateParser(),
+        private readonly EnmlParser $enmlParser = new EnmlParser(),
     ) {
     }
 
@@ -19,7 +20,9 @@ final class NoteParser
         return new Note(
             title: (string) $xml->title,
 
-            content: $this->extractContent($xml),
+            content: $this->enmlParser->parse(
+                $this->extractContent($xml)
+            ),
 
             tags: $this->extractTags($xml),
 
