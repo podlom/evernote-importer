@@ -8,11 +8,11 @@ final readonly class Resource
 {
     public function __construct(
         public string $mimeType,
+        public ?string $hash = null,
         public ?string $filename = null,
         public ?string $data = null,
         public ?int $width = null,
         public ?int $height = null,
-        public ?string $hash = null,
     ) {
     }
 
@@ -22,6 +22,13 @@ final readonly class Resource
             return 0;
         }
 
-        return strlen(base64_decode($this->data, true) ?: '');
+        $decoded = base64_decode(
+            $this->data,
+            true
+        );
+
+        return $decoded === false
+            ? 0
+            : strlen($decoded);
     }
 }

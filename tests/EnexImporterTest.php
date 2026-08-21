@@ -108,4 +108,15 @@ final class EnexImporterTest extends TestCase
             $resource->data
         );
     }
+
+    public function test_resource_contains_hash(): void
+    {
+        $document = $this->importer()->import(
+            __DIR__.'/Fixtures/note-with-image.enex'
+        );
+
+        $resource = $document->notes[0]->resources[0];
+
+        self::assertNotEmpty($resource->hash);
+    }
 }
