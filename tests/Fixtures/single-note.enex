@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export4.dtd">
+<en-export export-date="20260821T101020Z" application="Evernote" version="11.30.6">
+  <note>
+    <title>Ethernet router</title>
+    <created>20140319T111324Z</created>
+    <updated>20140402T210516Z</updated>
+    <tag>internet</tag>
+    <note-attributes>
+      <source>mobile.android</source>
+    </note-attributes>
+    <content>
+      <![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note><div style="display:none;--en-chs:&quot;eyJpc0VtcHR5Ijp0cnVlfQ==&quot;"> </div><div>Tp-link N750 WDR4300</div><div><br clear="none" /></div><div><span>Asus N65 dark night</span><br clear="none" /><span>Asus N56</span></div><div><br clear="none" /></div>Zyxel Internet Center 2<div><br clear="none" /></div><div><span style="line-height: 19.9999942779541px;"><br clear="none" /></span></div></en-note>      ]]>
+    </content>
+  </note>
+</en-export>

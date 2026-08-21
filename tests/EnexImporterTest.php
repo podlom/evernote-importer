@@ -40,4 +40,18 @@ final class EnexImporterTest extends TestCase
             $note->author
         );
     }
+
+    public function test_imports_multiple_notes(): void
+    {
+        $importer = new EnexImporter();
+
+        $document = $importer->import(
+            __DIR__.'/Fixtures/multiple-notes-5.enex'
+        );
+
+        self::assertCount(
+            5,
+            $document->notes
+        );
+    }
 }
