@@ -4,25 +4,39 @@ declare(strict_types=1);
 
 namespace Podlom\EvernoteImporter\Exporter;
 
+use Podlom\EvernoteImporter\DTO\Note;
 use Podlom\EvernoteImporter\DTO\EvernoteDocument;
+use Podlom\EvernoteImporter\Parser\EnmlMediaResolver;
 
 final class MarkdownExporter implements ExporterInterface
 {
+    public function __construct(
+        private readonly ResourceExporter $resourceExporter = new ResourceExporter(),
+        private readonly EnmlMediaResolver $mediaResolver = new EnmlMediaResolver(),
+    ) {
+    }
+
     public function export(
         EvernoteDocument $document,
         string $destination
     ): void {
         $notesDirectory = $destination.'/notes';
 
-        if (!is_dir($notesDirectory)) {
-            mkdir(
-                $notesDirectory,
-                0777,
-                true
-            );
-        }
+        $this->ensureDirectory($notesDirectory);
+
+        $resourcesDirectory = $destination.'/resources';
+
+        $this->ensureDirectory($resourcesDirectory);
 
         foreach ($document->notes as $note) {
+
+            foreach ($note->resources as $resource) {
+                $this->resourceExporter->export(
+                    $resource,
+                    $resourcesDirectory
+                );
+            }
+
             file_put_contents(
                 $notesDirectory.'/'.$this->filename($note->title),
                 $this->render($note)
@@ -32,11 +46,22 @@ final class MarkdownExporter implements ExporterInterface
 
     private function filename(string $title): string
     {
-        return $title.'.md';
+        $safe = preg_replace(
+            '/[\\\\\/:*?"<>|]/',
+            '-',
+            $title
+        );
+
+        return $safe . '.md';
     }
 
-    private function render($note): string
+    private function render(Note $note): string
     {
+        $content = $this->mediaResolver->resolve(
+            $note->content,
+            $note->resources
+        );
+
         $tags = implode(
             ', ',
             $note->tags
@@ -60,8 +85,19 @@ created: "{$created}"
 updated: "{$updated}"
 ---
 
-{$note->content}
+{$content}
 
 MARKDOWN;
+    }
+
+    private function ensureDirectory(string $directory): void
+    {
+        if (!is_dir($directory)) {
+            mkdir(
+                $directory,
+                0777,
+                true
+            );
+        }
     }
 }
