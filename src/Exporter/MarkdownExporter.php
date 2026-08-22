@@ -6,6 +6,7 @@ namespace Podlom\EvernoteImporter\Exporter;
 
 use Podlom\EvernoteImporter\DTO\Note;
 use Podlom\EvernoteImporter\DTO\EvernoteDocument;
+use Podlom\EvernoteImporter\Parser\EnmlCleaner;
 use Podlom\EvernoteImporter\Parser\EnmlMediaResolver;
 
 final class MarkdownExporter implements ExporterInterface
@@ -13,6 +14,7 @@ final class MarkdownExporter implements ExporterInterface
     public function __construct(
         private readonly ResourceExporter $resourceExporter = new ResourceExporter(),
         private readonly EnmlMediaResolver $mediaResolver = new EnmlMediaResolver(),
+        private readonly EnmlCleaner $cleaner = new EnmlCleaner(),
     ) {
     }
 
@@ -60,6 +62,10 @@ final class MarkdownExporter implements ExporterInterface
         $content = $this->mediaResolver->resolve(
             $note->content,
             $note->resources
+        );
+
+        $content = $this->cleaner->clean(
+            $content
         );
 
         $tags = implode(

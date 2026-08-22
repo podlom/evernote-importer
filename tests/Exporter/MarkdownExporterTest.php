@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Podlom\EvernoteImporter\DTO\EvernoteDocument;
 use Podlom\EvernoteImporter\DTO\Note;
 use Podlom\EvernoteImporter\Exporter\MarkdownExporter;
+use Podlom\EvernoteImporter\EnexImporter;
 
 final class MarkdownExporterTest extends TestCase
 {
@@ -64,5 +65,33 @@ final class MarkdownExporterTest extends TestCase
         }
 
         rmdir($directory);
+    }
+
+    public function test_exports_embedded_image_reference(): void
+    {
+        $importer = new EnexImporter();
+
+        $document = $importer->import(
+            __DIR__.'/../Fixtures/note-with-image.enex'
+        );
+
+        $destination = sys_get_temp_dir()
+            .'/markdown-image-export-test';
+
+        $exporter = new MarkdownExporter();
+
+        $exporter->export(
+            $document,
+            $destination
+        );
+
+        $markdown = file_get_contents(
+            $destination.'/notes/note-with-image.md'
+        );
+
+        self::assertStringContainsString(
+            '![image](../resources/',
+            $markdown
+        );
     }
 }

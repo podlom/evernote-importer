@@ -20,9 +20,11 @@ final class EnmlMediaResolver
                 continue;
             }
 
-            $content = str_replace(
-                'hash="'.$resource->hash.'"',
-                'src="resources/'.$resource->filename.'"',
+            $content = preg_replace(
+                '/<en-media[^>]*hash="'
+                .$resource->hash
+                .'"[^>]*\/>/',
+                '![image](../resources/'.$resource->filename.')',
                 $content
             );
         }
