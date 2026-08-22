@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Podlom\EvernoteImporter\Exporter;
+
+use Podlom\EvernoteImporter\DTO\Resource;
+use RuntimeException;
+
+final class ResourceExporter
+{
+    public function export(
+        Resource $resource,
+        string $destination
+    ): string {
+        if (!is_dir($destination)) {
+            mkdir(
+                $destination,
+                0777,
+                true
+            );
+        }
+
+        $filename = $resource->filename
+            ?? $resource->hash.'.bin';
+
+        $path = $destination.'/'.$filename;
+
+        $data = base64_decode(
+            $resource->data ?? '',
+            true
+        );
+
+        if ($data === false) {
+            throw new RuntimeException(
+                'Invalid resource data'
+            );
+        }
+
+        file_put_contents(
+            $path,
+            $data
+        );
+
+        return $path;
+    }
+}
