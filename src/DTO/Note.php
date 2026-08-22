@@ -17,6 +17,7 @@ final readonly class Note
         public string $content,
         public array $tags = [],
         public ?string $author = null,
+        public ?string $notebook = null,
         public ?DateTimeImmutable $createdAt = null,
         public ?DateTimeImmutable $updatedAt = null,
         public array $resources = [],

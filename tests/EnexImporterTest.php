@@ -135,4 +135,20 @@ final class EnexImporterTest extends TestCase
             $note->content
         );
     }
+
+    public function test_imports_notebook(): void
+    {
+        $importer = new EnexImporter();
+
+        $document = $importer->import(
+            __DIR__.'/Fixtures/note-with-notebook.enex'
+        );
+
+        $note = $document->notes[0];
+
+        self::assertSame(
+            'Laravel Course',
+            $note->notebook
+        );
+    }
 }

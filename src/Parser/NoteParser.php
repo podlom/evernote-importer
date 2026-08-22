@@ -39,6 +39,8 @@ final class NoteParser
 
             author: $this->extractAuthor($xml),
 
+            notebook: $this->extractNotebook($xml),
+
             createdAt: $this->dateParser->parse(
                 (string) $xml->created
             ),
@@ -92,5 +94,15 @@ final class NoteParser
         }
 
         return $resources;
+    }
+
+    private function extractNotebook(
+        SimpleXMLElement $xml
+    ): ?string {
+        if (!isset($xml->notebook)) {
+            return null;
+        }
+
+        return (string) $xml->notebook;
     }
 }
