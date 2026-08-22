@@ -81,9 +81,12 @@ final class MarkdownExporter implements ExporterInterface
             'Y-m-d H:i:s'
         );
 
+        $notebook = $this->renderNotebook($note);
+
         return <<<MARKDOWN
 ---
 title: "{$note->title}"
+{$notebook}
 tags:
   - {$tags}
 author: "{$note->author}"
@@ -105,5 +108,14 @@ MARKDOWN;
                 true
             );
         }
+    }
+
+    private function renderNotebook(Note $note): string
+    {
+        if ($note->notebook === null) {
+            return '';
+        }
+
+        return 'notebook: "'.$note->notebook.'"';
     }
 }

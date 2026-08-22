@@ -94,4 +94,45 @@ final class MarkdownExporterTest extends TestCase
             $markdown
         );
     }
+
+    public function test_exports_notebook_metadata(): void
+    {
+        $importer = new EnexImporter();
+
+        $document = $importer->import(
+            __DIR__.'/../Fixtures/note-with-notebook.enex'
+        );
+
+        $destination = sys_get_temp_dir()
+            .'/markdown-notebook-export-test';
+
+        $exporter = new MarkdownExporter();
+
+        $exporter->export(
+            $document,
+            $destination
+        );
+
+        $files = glob(
+            $destination.'/notes/*.md'
+        );
+
+        self::assertCount(
+            1,
+            $files
+        );
+
+        $markdown = file_get_contents(
+            $files[0]
+        );
+
+        self::assertNotFalse(
+            $markdown
+        );
+
+        self::assertStringContainsString(
+            'notebook: "Laravel Course"',
+            $markdown
+        );
+    }
 }
