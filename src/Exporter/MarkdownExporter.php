@@ -8,6 +8,7 @@ use Podlom\EvernoteImporter\DTO\Note;
 use Podlom\EvernoteImporter\DTO\EvernoteDocument;
 use Podlom\EvernoteImporter\Parser\EnmlCleaner;
 use Podlom\EvernoteImporter\Parser\EnmlMediaResolver;
+use Podlom\EvernoteImporter\Exporter\FilenameGenerator;
 
 final class MarkdownExporter implements ExporterInterface
 {
@@ -16,6 +17,7 @@ final class MarkdownExporter implements ExporterInterface
         private readonly EnmlMediaResolver $mediaResolver = new EnmlMediaResolver(),
         private readonly FrontMatterRenderer $frontMatterRenderer = new FrontMatterRenderer(),
         private readonly EnmlCleaner $cleaner = new EnmlCleaner(),
+        private readonly FilenameGenerator $filenameGenerator = new FilenameGenerator(),
     ) {
     }
 
@@ -32,7 +34,6 @@ final class MarkdownExporter implements ExporterInterface
         $this->ensureDirectory($resourcesDirectory);
 
         foreach ($document->notes as $note) {
-
             foreach ($note->resources as $resource) {
                 $this->resourceExporter->export(
                     $resource,
@@ -41,21 +42,10 @@ final class MarkdownExporter implements ExporterInterface
             }
 
             file_put_contents(
-                $notesDirectory.'/'.$this->filename($note->title),
+                $notesDirectory.'/'.$this->filenameGenerator->generate($note->title),
                 $this->render($note)
             );
         }
-    }
-
-    private function filename(string $title): string
-    {
-        $safe = preg_replace(
-            '/[\\\\\/:*?"<>|]/',
-            '-',
-            $title
-        );
-
-        return $safe . '.md';
     }
 
     private function render(
