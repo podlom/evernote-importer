@@ -135,4 +135,56 @@ final class MarkdownExporterTest extends TestCase
             $markdown
         );
     }
+
+    public function test_exports_tags_as_yaml_array(): void
+    {
+        $importer = new EnexImporter();
+
+        $document = $importer->import(
+            __DIR__.'/../Fixtures/laravel-lesson.enex'
+        );
+
+        $destination = sys_get_temp_dir()
+            .'/markdown-tags-export-test-'.uniqid();
+
+        $exporter = new MarkdownExporter();
+
+        $exporter->export(
+            $document,
+            $destination
+        );
+
+        $files = glob(
+            $destination.'/notes/*.md'
+        );
+
+        self::assertCount(
+            1,
+            $files
+        );
+
+        $markdown = file_get_contents(
+            $files[0]
+        );
+
+        self::assertNotFalse(
+            $markdown
+        );
+
+        self::assertStringContainsString(
+            'tags:',
+            $markdown
+        );
+
+        $markdown = str_replace(
+            "\r\n",
+            "\n",
+            $markdown
+        );
+
+        self::assertStringContainsString(
+            "tags:\n  - \"Laravel\"",
+            $markdown
+        );
+    }
 }

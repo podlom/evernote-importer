@@ -68,8 +68,7 @@ final class MarkdownExporter implements ExporterInterface
             $content
         );
 
-        $tags = implode(
-            ', ',
+        $tags = $this->renderTags(
             $note->tags
         );
 
@@ -88,7 +87,7 @@ final class MarkdownExporter implements ExporterInterface
 title: "{$note->title}"
 {$notebook}
 tags:
-  - {$tags}
+{$tags}
 author: "{$note->author}"
 created: "{$created}"
 updated: "{$updated}"
@@ -117,5 +116,21 @@ MARKDOWN;
         }
 
         return 'notebook: "'.$note->notebook.'"';
+    }
+
+    private function renderTags(
+        array $tags
+    ): string {
+        if ($tags === []) {
+            return '';
+        }
+
+        return implode(
+            "\n",
+            array_map(
+                fn(string $tag) => '  - "'.$tag.'"',
+                $tags
+            )
+        );
     }
 }
