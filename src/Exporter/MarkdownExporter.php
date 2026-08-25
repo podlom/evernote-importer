@@ -14,6 +14,7 @@ final class MarkdownExporter implements ExporterInterface
     public function __construct(
         private readonly ResourceExporter $resourceExporter = new ResourceExporter(),
         private readonly EnmlMediaResolver $mediaResolver = new EnmlMediaResolver(),
+        private readonly FrontMatterRenderer $frontMatterRenderer = new FrontMatterRenderer(),
         private readonly EnmlCleaner $cleaner = new EnmlCleaner(),
     ) {
     }
@@ -57,8 +58,9 @@ final class MarkdownExporter implements ExporterInterface
         return $safe . '.md';
     }
 
-    private function render(Note $note): string
-    {
+    private function render(
+        Note $note
+    ): string {
         $content = $this->mediaResolver->resolve(
             $note->content,
             $note->resources
@@ -68,34 +70,11 @@ final class MarkdownExporter implements ExporterInterface
             $content
         );
 
-        $tags = $this->renderTags(
-            $note->tags
+        $frontMatter = $this->frontMatterRenderer->render(
+            $note
         );
 
-        $created = $note->createdAt?->format(
-            'Y-m-d H:i:s'
-        );
-
-        $updated = $note->updatedAt?->format(
-            'Y-m-d H:i:s'
-        );
-
-        $notebook = $this->renderNotebook($note);
-
-        return <<<MARKDOWN
----
-title: "{$note->title}"
-{$notebook}
-tags:
-{$tags}
-author: "{$note->author}"
-created: "{$created}"
-updated: "{$updated}"
----
-
-{$content}
-
-MARKDOWN;
+        return $frontMatter.$content."\n";
     }
 
     private function ensureDirectory(string $directory): void
