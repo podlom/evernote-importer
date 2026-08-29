@@ -9,6 +9,11 @@ use RuntimeException;
 
 final class ResourceExporter
 {
+    public function __construct(
+        private readonly ResourceFilenameGenerator $filenameGenerator = new ResourceFilenameGenerator(),
+    ) {
+    }
+
     public function export(
         Resource $resource,
         string $destination
@@ -21,8 +26,9 @@ final class ResourceExporter
             );
         }
 
-        $filename = $resource->filename
-            ?? $resource->hash.'.bin';
+        $filename = $this->filenameGenerator->generate(
+            $resource
+        );
 
         $path = $destination.'/'.$filename;
 
