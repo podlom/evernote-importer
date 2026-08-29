@@ -41,6 +41,77 @@ final class ResourceExporterTest extends TestCase
         );
     }
 
+    public function test_exports_resource_with_generated_filename(): void
+    {
+        $destination = sys_get_temp_dir()
+            .'/resource-generated-name-test';
+
+        if (is_dir($destination)) {
+            $this->removeDirectory($destination);
+        }
+
+        $resource = new Resource(
+            mimeType: 'image/jpeg',
+            hash: 'abc123',
+            filename: null,
+            data: base64_encode('jpeg-content'),
+        );
+
+        $exporter = new ResourceExporter();
+
+        $path = $exporter->export(
+            $resource,
+            $destination
+        );
+
+        self::assertFileExists(
+            $path
+        );
+
+        self::assertStringEndsWith(
+            '.jpg',
+            $path
+        );
+
+        self::assertSame(
+            'jpeg-content',
+            file_get_contents($path)
+        );
+    }
+
+    public function test_sanitizes_resource_filename(): void
+    {
+        $destination = sys_get_temp_dir()
+            .'/resource-sanitize-name-test';
+
+        if (is_dir($destination)) {
+            $this->removeDirectory($destination);
+        }
+
+        $resource = new Resource(
+            mimeType: 'image/jpeg',
+            hash: 'abc123',
+            filename: '../photo:test.jpg',
+            data: base64_encode('image-content'),
+        );
+
+        $exporter = new ResourceExporter();
+
+        $path = $exporter->export(
+            $resource,
+            $destination
+        );
+
+        self::assertFileExists(
+            $path
+        );
+
+        self::assertStringEndsWith(
+            'photo-test.jpg',
+            $path
+        );
+    }
+
     private function removeDirectory(string $directory): void
     {
         foreach (glob($directory.'/*') ?: [] as $file) {
