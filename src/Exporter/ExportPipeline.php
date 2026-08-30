@@ -10,7 +10,7 @@ final class ExportPipeline implements ExporterInterface
 {
     public function __construct(
         private readonly ResourceExporter $resourceExporter = new ResourceExporter(),
-        private readonly NoteExporterInterface $markdownExporter = new MarkdownExporter(),
+        private readonly NoteExporterInterface $noteExporter = new MarkdownExporter(),
     ) {
     }
 
@@ -31,7 +31,7 @@ final class ExportPipeline implements ExporterInterface
                 $resources++;
             }
 
-            $this->markdownExporter->exportNote(
+            $this->noteExporter->exportNote(
                 $note,
                 $context->destination
             );
