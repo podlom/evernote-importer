@@ -10,6 +10,6 @@ interface ExporterInterface
 {
     public function export(
         EvernoteDocument $document,
-        string $destination
-    ): void;
+        ExportContext $context
+    ): ExportResult;
 }

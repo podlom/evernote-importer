@@ -6,11 +6,11 @@ namespace Podlom\EvernoteImporter\Exporter;
 
 use Podlom\EvernoteImporter\DTO\EvernoteDocument;
 
-final class ExportPipeline
+final class ExportPipeline implements ExporterInterface
 {
     public function __construct(
         private readonly ResourceExporter $resourceExporter = new ResourceExporter(),
-        private readonly MarkdownExporter $markdownExporter = new MarkdownExporter(),
+        private readonly NoteExporterInterface $markdownExporter = new MarkdownExporter(),
     ) {
     }
 

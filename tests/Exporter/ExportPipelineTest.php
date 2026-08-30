@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Podlom\EvernoteImporter\Exporter\ExportContext;
 use Podlom\EvernoteImporter\Exporter\ExportPipeline;
 use Podlom\EvernoteImporter\EnexImporter;
+use Podlom\EvernoteImporter\Exporter\ExporterInterface;
 
 final class ExportPipelineTest extends TestCase
 {
@@ -45,6 +46,16 @@ final class ExportPipelineTest extends TestCase
 
         self::assertFileExists(
             $destination.'/notes/Image Test.md'
+        );
+    }
+
+    public function test_pipeline_is_document_exporter(): void
+    {
+        $pipeline = new ExportPipeline();
+
+        self::assertInstanceOf(
+            ExporterInterface::class,
+            $pipeline
         );
     }
 }
