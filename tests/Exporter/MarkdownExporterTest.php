@@ -7,7 +7,8 @@ namespace Podlom\EvernoteImporter\Tests\Exporter;
 use PHPUnit\Framework\TestCase;
 use Podlom\EvernoteImporter\DTO\EvernoteDocument;
 use Podlom\EvernoteImporter\DTO\Note;
-use Podlom\EvernoteImporter\Exporter\MarkdownExporter;
+use Podlom\EvernoteImporter\Exporter\ExportContext;
+use Podlom\EvernoteImporter\Exporter\ExportPipeline;
 use Podlom\EvernoteImporter\EnexImporter;
 
 final class MarkdownExporterTest extends TestCase
@@ -34,11 +35,13 @@ final class MarkdownExporterTest extends TestCase
             $this->removeDirectory($destination);
         }
 
-        $exporter = new MarkdownExporter();
+        $pipeline = new ExportPipeline();
 
-        $exporter->export(
+        $pipeline->export(
             $document,
-            $destination
+            new ExportContext(
+                destination: $destination
+            )
         );
 
         $file = $destination.'/notes/My Laravel Note.md';
@@ -78,11 +81,13 @@ final class MarkdownExporterTest extends TestCase
         $destination = sys_get_temp_dir()
             .'/markdown-image-export-test';
 
-        $exporter = new MarkdownExporter();
+        $pipeline = new ExportPipeline();
 
-        $exporter->export(
+        $pipeline->export(
             $document,
-            $destination
+            new ExportContext(
+                destination: $destination
+            )
         );
 
         $markdown = file_get_contents(
@@ -106,11 +111,13 @@ final class MarkdownExporterTest extends TestCase
         $destination = sys_get_temp_dir()
             .'/markdown-notebook-export-test';
 
-        $exporter = new MarkdownExporter();
+        $pipeline = new ExportPipeline();
 
-        $exporter->export(
+        $pipeline->export(
             $document,
-            $destination
+            new ExportContext(
+                destination: $destination
+            )
         );
 
         $files = glob(
@@ -147,11 +154,13 @@ final class MarkdownExporterTest extends TestCase
         $destination = sys_get_temp_dir()
             .'/markdown-tags-export-test-'.uniqid();
 
-        $exporter = new MarkdownExporter();
+        $pipeline = new ExportPipeline();
 
-        $exporter->export(
+        $pipeline->export(
             $document,
-            $destination
+            new ExportContext(
+                destination: $destination
+            )
         );
 
         $files = glob(

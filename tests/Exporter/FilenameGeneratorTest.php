@@ -6,8 +6,9 @@ namespace Podlom\EvernoteImporter\Tests\Exporter;
 
 use PHPUnit\Framework\TestCase;
 use Podlom\EvernoteImporter\EnexImporter;
+use Podlom\EvernoteImporter\Exporter\ExportContext;
+use Podlom\EvernoteImporter\Exporter\ExportPipeline;
 use Podlom\EvernoteImporter\Exporter\FilenameGenerator;
-use Podlom\EvernoteImporter\Exporter\MarkdownExporter;
 
 final class FilenameGeneratorTest extends TestCase
 {
@@ -56,11 +57,13 @@ final class FilenameGeneratorTest extends TestCase
         $destination = sys_get_temp_dir()
             .'/markdown-safe-filename-test-'.uniqid();
 
-        $exporter = new MarkdownExporter();
+        $pipeline = new ExportPipeline();
 
-        $exporter->export(
+        $pipeline->export(
             $document,
-            $destination
+            new ExportContext(
+                destination: $destination
+            )
         );
 
         $files = glob(
