@@ -38,5 +38,13 @@ final class ExportPipelineTest extends TestCase
             3,
             $result->resourcesExported
         );
+
+        self::assertFileExists(
+            $destination.'/notes/Simple Markdown Test.md'
+        );
+
+        self::assertFileExists(
+            $destination.'/notes/Image Test.md'
+        );
     }
 }

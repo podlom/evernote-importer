@@ -22,7 +22,6 @@ final class ExportPipeline
         $resources = 0;
 
         foreach ($document->notes as $note) {
-
             foreach ($note->resources as $resource) {
                 $this->resourceExporter->export(
                     $resource,
@@ -32,8 +31,8 @@ final class ExportPipeline
                 $resources++;
             }
 
-            $this->markdownExporter->export(
-                new EvernoteDocument([$note]),
+            $this->markdownExporter->exportNote(
+                $note,
                 $context->destination
             );
 
