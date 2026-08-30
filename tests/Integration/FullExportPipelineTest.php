@@ -11,6 +11,8 @@ use Podlom\EvernoteImporter\Exporter\ExportPipeline;
 
 final class FullExportPipelineTest extends TestCase
 {
+    private string $destination;
+
     public function test_exports_real_evernote_backup(): void
     {
         $importer = new EnexImporter();
@@ -19,7 +21,7 @@ final class FullExportPipelineTest extends TestCase
             __DIR__.'/../Fixtures/evernote-real-export.enex'
         );
 
-        $destination = sys_get_temp_dir()
+        $this->destination = sys_get_temp_dir()
             .'/full-export-test-'.uniqid();
 
         $pipeline = new ExportPipeline();
@@ -27,7 +29,7 @@ final class FullExportPipelineTest extends TestCase
         $result = $pipeline->export(
             $document,
             new ExportContext(
-                destination: $destination
+                destination: $this->destination
             )
         );
 
@@ -42,11 +44,29 @@ final class FullExportPipelineTest extends TestCase
         );
 
         self::assertFileExists(
-            $destination.'/notes/Simple Markdown Test.md'
+            $this->destination.'/notes/Simple Markdown Test.md'
         );
 
         self::assertFileExists(
-            $destination.'/notes/Image Test.md'
+            $this->destination.'/notes/Image Test.md'
         );
+    }
+
+    protected function tearDown(): void
+    {
+        if (isset($this->destination) && is_dir($this->destination)) {
+            $this->removeDirectory($this->destination);
+        }
+    }
+
+    private function removeDirectory(string $directory): void
+    {
+        foreach (glob($directory.'/*') ?: [] as $file) {
+            is_dir($file)
+                ? $this->removeDirectory($file)
+                : unlink($file);
+        }
+
+        rmdir($directory);
     }
 }
