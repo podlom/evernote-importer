@@ -48,6 +48,29 @@ final class MarkdownExporter implements ExporterInterface
         }
     }
 
+    public function exportNote(
+        Note $note,
+        string $destination
+    ): string {
+        $notesDirectory = $destination.'/notes';
+
+        $this->ensureDirectory(
+            $notesDirectory
+        );
+
+        $path = $notesDirectory.'/'
+            .$this->filenameGenerator->generate(
+                $note->title
+            );
+
+        file_put_contents(
+            $path,
+            $this->render($note)
+        );
+
+        return $path;
+    }
+
     private function render(
         Note $note
     ): string {
