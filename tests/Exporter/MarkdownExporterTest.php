@@ -81,9 +81,9 @@ final class MarkdownExporterTest extends TestCase
         $destination = sys_get_temp_dir()
             .'/markdown-image-export-test';
 
-        $exporter = new ExportPipeline();
+        $pipeline = new ExportPipeline();
 
-        $exporter->export(
+        $pipeline->export(
             $document,
             new ExportContext(
                 destination: $destination
@@ -111,9 +111,9 @@ final class MarkdownExporterTest extends TestCase
         $destination = sys_get_temp_dir()
             .'/markdown-notebook-export-test';
 
-        $exporter = new ExportPipeline();
+        $pipeline = new ExportPipeline();
 
-        $exporter->export(
+        $pipeline->export(
             $document,
             new ExportContext(
                 destination: $destination
@@ -154,9 +154,9 @@ final class MarkdownExporterTest extends TestCase
         $destination = sys_get_temp_dir()
             .'/markdown-tags-export-test-'.uniqid();
 
-        $exporter = new ExportPipeline();
+        $pipeline = new ExportPipeline();
 
-        $exporter->export(
+        $pipeline->export(
             $document,
             new ExportContext(
                 destination: $destination
